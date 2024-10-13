@@ -1,0 +1,32 @@
+{
+    "name": "go-gql-sqlc-template",
+    "dockerComposeFile": ["../compose.yaml"],
+    "service": "api",
+    "workspaceFolder": "/go/src",
+    "forwardPorts": [8000, 5432],
+    "shutdownAction": "stopCompose",
+    "runServices": ["api", "db"],
+    "postStartCommand": "go mod download; task devcontainer-git-config",
+    "remoteUser": "vscode",
+    "updateRemoteUserUID": true,
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "go.toolsManagement.checkForUpdates": "local",
+                "go.gopath": "/go",
+                "go.formatTool": "goimports",
+                "go.useLanguageServer": true,
+                "editor.formatOnSave": false,
+                "[go]": {
+                    "editor.formatOnSave": true
+                }
+            },
+            "extensions": [
+                "golang.Go",
+                "usernamehw.errorlens",
+                "mquandalle.graphql",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}

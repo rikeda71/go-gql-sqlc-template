@@ -1,0 +1,56 @@
+"""
+User Information
+"""
+type User {
+  """
+  ユーザID
+  """
+  id: ID!
+  """
+  名前
+  """
+  name: String!
+  """
+  メールアドレス
+  """
+  email: String!
+}
+
+"""
+Create User Input
+"""
+input CreateUserInput {
+  """
+  名前
+  """
+  name: String!
+  """
+  メールアドレス
+  """
+  email: String!
+}
+
+"""
+Create User Output
+"""
+type CreateUserOutput {
+  """
+  作成した結果
+  """
+  status: MutationStatus!
+  """
+  error message
+  """
+  errorMessage: String
+  """
+  metadata
+  """
+  metadata: CreateUserOutputMetadata
+}
+
+type CreateUserOutputMetadata {
+  """
+  作成したユーザ情報
+  """
+  user: User
+}

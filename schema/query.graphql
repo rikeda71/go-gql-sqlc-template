@@ -1,0 +1,14 @@
+"""
+Query
+"""
+type Query {
+  """
+  ユーザ情報を取得
+  """
+  user(
+    """
+    ユーザID
+    """
+    id: ID!
+  ): User!
+}
