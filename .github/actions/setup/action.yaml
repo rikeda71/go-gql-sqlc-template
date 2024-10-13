@@ -1,0 +1,22 @@
+name: backend-setup
+
+description: 'Setup backend'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        cache: true
+        cache-dependency-path: |
+          go.mod
+          go.mod
+        go-version-file: go.mod
+
+    - name: Install Dependencies
+      run: |
+        go install github.com/go-task/task/v3/cmd/task@latest
+        task install
+        go mod download
+      shell: bash

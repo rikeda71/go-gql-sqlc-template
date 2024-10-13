@@ -1,0 +1,55 @@
+name: ci
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+        paths:
+            - ".github/workflows/*.yaml"
+            - "docker/*"
+            - "compose.yaml"
+            - "sqlc.yaml"
+            - "gqlgen.yml"
+            - "go.mod"
+            - "go.sum"
+            - "**/*.go"
+
+jobs:
+    setup:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup
+              uses: ./.github/actions/setup
+
+    lint:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Lint
+              uses: golangci/golangci-lint-action@v6
+              with:
+                  version: latest
+                  args: --timeout 5m
+                  skip-cache: true
+
+    test:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Test
+              run: task integration-test
+        env:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: postgres
+            POSTGRES_HOST: localhost
+            DATABASE_USER: user
+            DATABASE_PASSWORD: password
+            DATABASE_NAME: postgres
+            DATABASE_HOST: localhost
