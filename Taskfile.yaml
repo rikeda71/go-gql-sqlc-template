@@ -13,7 +13,7 @@ tasks:
     - '[ -f .env ] && echo ".env already exists" || cp .env.example .env'
 
   install-dependencies:
-    - brew install libpq || true # Docker 上で処理できないことを回避するため
+    - brew install libpq || true # In Docker Environment, libpq is already installed
     - go install github.com/99designs/gqlgen@latest
     - go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
     - go install github.com/amacneil/dbmate@latest
@@ -40,7 +40,7 @@ tasks:
 
   rollback:
     desc: "Rollback database migrations"
-    # `down` コマンドでは1回分のロールバックしか実行されないため、DDL, DMLの定義の数だけロールバックする
+    # The `dbmate down` command only rolls back one migration at a time, so you'll need to run it as many times as there are DDL and DML statements to fully roll back.
     cmds:
       - |
         for i in $(seq 1 $(ls ./db/migrations | wc -l)); do

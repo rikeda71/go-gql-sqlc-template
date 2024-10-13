@@ -7,6 +7,8 @@ Use Following Techstack
 - [Go](https://github.com/golang/go) : Modern Programing Language
 - [gqlgen](https://github.com/99designs/gqlgen) : Use GraphQL Schema
 - [sqlc](https://github.com/sqlc-dev/sqlc) : SQL based OR Mapper
+- [dbmate](https://github.com/amacneil/dbmate) : Migration Tool
+- [task](https://github.com/go-task/task) : Task Runner
 
 ## Setup
 
