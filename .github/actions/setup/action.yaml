@@ -1,9 +1,9 @@
 name: backend-setup
 
-description: 'Setup backend'
+description: "Setup backend"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Setup Go
       uses: actions/setup-go@v5
@@ -17,6 +17,6 @@ runs:
     - name: Install Dependencies
       run: |
         go install github.com/go-task/task/v3/cmd/task@latest
-        task install
+        task setup
         go mod download
       shell: bash
