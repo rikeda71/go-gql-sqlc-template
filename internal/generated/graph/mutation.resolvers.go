@@ -23,7 +23,9 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input CreateUserInput
 	}
 	result, err := r.DBClient.InsertUser(ctx, db.InsertUserParams{ID: id.String(), UserName: input.Name, Email: input.Email})
 	if err != nil {
-		return &CreateUserOutput{Status: MutationStatusFailure, ErrorMessage: nil}, nil
+		msg := errors.Join(err, errors.New("failed to insert user")).Error()
+		slog.Error(msg, "email", input.Email, "name", input.Name)
+		return &CreateUserOutput{Status: MutationStatusFailure, ErrorMessage: &msg}, nil
 	}
 	return &CreateUserOutput{
 		Status: MutationStatusSuccess,

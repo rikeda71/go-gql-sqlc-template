@@ -3,15 +3,15 @@ User Information
 """
 type User {
   """
-  ユーザID
+  User ID
   """
   id: ID!
   """
-  名前
+  User Name
   """
   name: String!
   """
-  メールアドレス
+  Email Address
   """
   email: String!
 }
@@ -21,11 +21,11 @@ Create User Input
 """
 input CreateUserInput {
   """
-  名前
+  User Name
   """
   name: String!
   """
-  メールアドレス
+  Email Address
   """
   email: String!
 }
@@ -35,7 +35,7 @@ Create User Output
 """
 type CreateUserOutput {
   """
-  作成した結果
+  status
   """
   status: MutationStatus!
   """
@@ -50,7 +50,7 @@ type CreateUserOutput {
 
 type CreateUserOutputMetadata {
   """
-  作成したユーザ情報
+  Created User Information
   """
   user: User
 }

@@ -1,6 +1,6 @@
 -- name: InsertUser :one
 INSERT INTO users /* users_001 */
-(id, user_name, email) VALUES ($1, $2, $3, $4)
+(id, user_name, email) VALUES ($1, $2, $3)
 RETURNING *;
 
 -- name: FindUserByID :one
