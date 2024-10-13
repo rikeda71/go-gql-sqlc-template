@@ -3,11 +3,11 @@ Mutation
 """
 type Mutation {
   """
-  ユーザを作成
+  Create User
   """
   createUser(
     """
-    作成したいユーザ情報
+    User Information for Creation
     """
     input: CreateUserInput!
   ): CreateUserOutput!

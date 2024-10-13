@@ -1,0 +1,30 @@
+linters:
+  disable-all: true
+  enable:
+    - gofmt
+    - goimports
+
+    - staticcheck
+    - unused
+    - gosimple
+    - typecheck
+
+    - revive
+
+issues:
+  exclude-use-default: false
+
+linters-settings:
+  revive:
+    rules:
+      # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#import-shadowing
+      - name: import-shadowing
+        severity: warning
+        disabled: false
+
+      # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#argument-limit
+      # limit the number of arguments to a function
+      - name: argument-limit
+        severity: warning
+        disabled: false
+        arguments: [5]

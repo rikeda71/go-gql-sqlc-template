@@ -58,10 +58,10 @@ func TestCrudUser(t *testing.T) {
 		if err != nil {
 			t.Errorf("cause error when unmarshal response. error = %v", err)
 		}
-		// 後のテストで使うのでuserIDを取得
+		// get userID for later test
 		userID = actual.Data.CreateUserOutput.Metadata.User.ID
 
-		// 比較用にIDを固定
+		// set fixed ID for comparison
 		actual.Data.CreateUserOutput.Metadata.User.ID = "1"
 		expected := createUserMutationResponse{
 			Data: struct {

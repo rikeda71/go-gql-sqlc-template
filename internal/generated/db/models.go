@@ -12,18 +12,16 @@ type SchemaMigration struct {
 	Version string
 }
 
-// ユーザ情報
+// User Information
 type User struct {
-	// ユーザID
+	// UserID
 	ID string
-	// ユーザ名
+	// UserName
 	UserName string
-	// メールアドレス
+	// Email Address
 	Email string
-	// Stripeによる課金で使われるID
-	StripeClientID string
-	// 作成日
+	// Creation Date
 	CreatedAt pgtype.Timestamp
-	// 更新日
+	// Last Update Date
 	UpdatedAt pgtype.Timestamp
 }

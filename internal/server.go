@@ -45,7 +45,7 @@ func (s *Server) Start(hasPlayground bool) error {
 	})
 	// metrics
 	mwConf := echoprometheus.MiddlewareConfig{
-		Subsystem: "go-gql-sqlc-template",
+		Subsystem: "api",
 		Skipper: func(c echo.Context) bool {
 			// ignore health check, metrics
 			return strings.Contains(c.Path(), "health") || strings.Contains(c.Path(), "metrics")

@@ -3,11 +3,11 @@ Query
 """
 type Query {
   """
-  ユーザ情報を取得
+  Get User Information
   """
   user(
     """
-    ユーザID
+    User ID
     """
     id: ID!
   ): User!

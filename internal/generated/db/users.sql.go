@@ -11,7 +11,7 @@ import (
 
 const findUserByID = `-- name: FindUserByID :one
 SELECT /* users_002 */
-    id, user_name, email, stripe_client_id, created_at, updated_at
+    id, user_name, email, created_at, updated_at
 FROM users
 WHERE id = $1
 `
@@ -23,7 +23,6 @@ func (q *Queries) FindUserByID(ctx context.Context, id string) (User, error) {
 		&i.ID,
 		&i.UserName,
 		&i.Email,
-		&i.StripeClientID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -32,30 +31,23 @@ func (q *Queries) FindUserByID(ctx context.Context, id string) (User, error) {
 
 const insertUser = `-- name: InsertUser :one
 INSERT INTO users /* users_001 */
-(id, user_name, email, stripe_client_id) VALUES ($1, $2, $3, $4)
-RETURNING id, user_name, email, stripe_client_id, created_at, updated_at
+(id, user_name, email) VALUES ($1, $2, $3)
+RETURNING id, user_name, email, created_at, updated_at
 `
 
 type InsertUserParams struct {
-	ID             string
-	UserName       string
-	Email          string
-	StripeClientID string
+	ID       string
+	UserName string
+	Email    string
 }
 
 func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, insertUser,
-		arg.ID,
-		arg.UserName,
-		arg.Email,
-		arg.StripeClientID,
-	)
+	row := q.db.QueryRow(ctx, insertUser, arg.ID, arg.UserName, arg.Email)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.UserName,
 		&i.Email,
-		&i.StripeClientID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
