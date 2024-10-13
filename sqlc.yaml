@@ -1,0 +1,46 @@
+# https://docs.sqlc.dev/en/stable/reference/config.html
+version: "2"
+sql:
+  - engine: postgresql
+    queries:
+      - "db/queries/*.sql"
+    schema:
+      - "db/schema.sql"
+    gen:
+      go:
+        package: db
+        out: internal/generated/db
+        sql_package: pgx/v5
+        emit_pointers_for_null_types: true
+        overrides:
+          - db_type: pg_catalog.numeric
+            go_type: github.com/shopspring/decimal.Decimal
+          - db_type: pg_catalog.numeric
+            go_type:
+              import: github.com/shopspring/decimal
+              type: Decimal
+              pointer: true
+            nullable: true
+          - db_type: uuid
+            go_type:
+              import: github.com/gofrs/uuid/v5
+              package: uuid
+              type: UUID
+          - db_type: uuid
+            go_type:
+              import: github.com/gofrs/uuid/v5
+              package: uuid
+              type: UUID
+              pointer: true
+            nullable: true
+          - db_type: timestamptz
+            go_type:
+              import: time
+              type: Time
+          - db_type: timestamptz
+            go_type:
+              import: time
+              type: Time
+              pointer: true
+            nullable: true
+rules: []

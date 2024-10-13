@@ -1,0 +1,21 @@
+"""
+Mutationの処理結果
+"""
+enum MutationStatus {
+  """
+  成功
+  """
+  SUCCESS
+  """
+  作成済み
+  """
+  ALREADY_EXISTS
+  """
+  失敗
+  """
+  FAILURE
+  """
+  バリデーションエラー
+  """
+  VALIDATION_ERROR
+}

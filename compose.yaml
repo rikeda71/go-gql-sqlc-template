@@ -1,0 +1,51 @@
+services:
+  api:
+    container_name: api
+    volumes:
+      - type: bind
+        source: ./
+        target: /go/src/
+    working_dir: /go/src/
+    tty: true
+    stdin_open: true
+    init: true
+    build:
+      context: "./"
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - "8000:8000"
+      - "5555:5555"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "localhost:8000/health"]
+      retries: 3
+      timeout: 5s
+    depends_on:
+      - db
+    networks:
+      - go-gql-sqlc-template
+
+  db:
+    container_name: db
+    hostname: db
+    # Cloud SQL とバージョンを揃えている
+    image: "postgres:16.3-bullseye"
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    networks:
+      - go-gql-sqlc-template
+    volumes:
+      - type: volume
+        source: postgresql
+        target: /var/lib/postgresql/data
+
+networks:
+  go-gql-sqlc-template:
+    driver: bridge
+
+volumes:
+  postgresql:
+    driver: local

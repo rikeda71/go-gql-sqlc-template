@@ -1,0 +1,47 @@
+FROM golang:1.23.1-bullseye
+
+WORKDIR /go/src
+
+# set user for devcontainer
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && mkdir -p /etc/sudoers.d \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && chsh -s /bin/bash $USERNAME \
+    && mkdir -p /nonexistent/.cache/go-build \
+    && chown -R "$USERNAME:$USERNAME" /nonexistent/ \
+    && chown -R "$USERNAME:$USERNAME" /nonexistent/.cache \
+    && chown -R "$USERNAME:$USERNAME" /nonexistent/.cache/go-build
+
+RUN apt update \
+    && apt install -y sudo vim libpq-dev
+
+# install go tools for dev container
+RUN go install github.com/go-task/task/v3/cmd/task@latest \
+    && go install golang.org/x/tools/gopls@latest \
+    && go install golang.org/x/lint/golint@latest \
+    && go install github.com/go-delve/delve/cmd/dlv@master \
+    && go install github.com/haya14busa/goplay/cmd/goplay@v1.0.0 \
+    && go install github.com/fatih/gomodifytags@v1.16.0 \
+    && go install github.com/josharian/impl@latest \
+    && go install github.com/cweill/gotests/gotests@latest \
+    && go install github.com/ramya-rao-a/go-outline@latest \
+    && go install golang.org/x/tools/cmd/godoc@latest \
+    && go install honnef.co/go/tools/cmd/staticcheck@latest \
+    # for debug
+    && go install github.com/go-delve/delve/cmd/dlv@master \
+    && go install github.com/air-verse/air@v1.52.3
+
+# install for additional tools
+COPY go.mod go.sum Taskfile.yaml ./
+RUN task install-dependencies
+
+USER $USERNAME
+
+CMD ["air", "-c", ".air.toml"]

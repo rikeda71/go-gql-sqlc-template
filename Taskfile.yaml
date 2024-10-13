@@ -1,0 +1,86 @@
+version: 3
+
+tasks:
+  setup:
+    desc: "Setup"
+    deps:
+      - create-env
+      - install-dependencies
+    cmds:
+      - echo "Setup done."
+
+  create-env:
+    - '[ -f .env ] && echo ".env already exists" || cp .env.example .env'
+
+  install-dependencies:
+    - brew install libpq || true # Docker 上で処理できないことを回避するため
+    - go install github.com/99designs/gqlgen@latest
+    - go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+    - go install github.com/amacneil/dbmate@latest
+    - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    - go install golang.org/x/tools/cmd/goimports@latest
+    - go install golang.org/x/tools/cmd/stringer@latest
+    - go install github.com/matryer/moq@latest
+    - go mod download
+
+  sqlc-gen:
+    desc: "Generate DB Access Codes from SQL"
+    cmds:
+      - sqlc generate
+
+  gql-gen:
+    desc: "Generate GraphQL Codes from Schema"
+    cmds:
+      - gqlgen generate
+
+  migrate:
+    desc: "Run database migrations"
+    cmds:
+      - dbmate up
+
+  rollback:
+    desc: "Rollback database migrations"
+    # `down` コマンドでは1回分のロールバックしか実行されないため、DDL, DMLの定義の数だけロールバックする
+    cmds:
+      - |
+        for i in $(seq 1 $(ls ./db/migrations | wc -l)); do
+          dbmate down || true
+        done
+
+  drop:
+    desc: "Drop database"
+    cmds:
+      - dbmate drop
+
+  goimports:
+    desc: "Run goimports"
+    cmds:
+      - goimports -w .
+
+  up:
+    desc: "exec 'docker compose up -d'"
+    cmds:
+      - docker compose up -d
+  down:
+    desc: "exec 'docker compose down'"
+    cmds:
+      - docker compose down
+  logs:
+    desc: "exec 'docker compose logs -f'"
+    cmds:
+      - docker compose logs -f
+
+  devcontainer-git-config:
+    desc: "Set git config for devcontainer"
+    cmds:
+      - git config --global --add safe.directory /go/src
+
+  test:
+    desc: "Run tests"
+    cmds:
+      - go test -v ./...
+
+  integration-test:
+    desc: "Run API tests"
+    cmds:
+      - go test -v '-tags=api' ./...

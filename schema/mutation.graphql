@@ -1,0 +1,14 @@
+"""
+Mutation
+"""
+type Mutation {
+  """
+  ユーザを作成
+  """
+  createUser(
+    """
+    作成したいユーザ情報
+    """
+    input: CreateUserInput!
+  ): CreateUserOutput!
+}
