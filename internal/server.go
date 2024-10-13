@@ -30,8 +30,8 @@ func NewServer(port int, gqlHandler handler.Server) *Server {
 func (s *Server) Start(hasPlayground bool) error {
 	s.server.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Skipper: func(c echo.Context) bool {
-			// health check, metrics のログは除外
-			// HttpStatusCode: 200 のログは除外
+			// ignore health check, metrics
+			// ignore HttpStatusCode: 200
 			return strings.Contains(c.Path(), "health") ||
 				strings.Contains(c.Path(), "metrics") ||
 				c.Response().Status == http.StatusOK
@@ -47,7 +47,7 @@ func (s *Server) Start(hasPlayground bool) error {
 	mwConf := echoprometheus.MiddlewareConfig{
 		Subsystem: "go-gql-sqlc-template",
 		Skipper: func(c echo.Context) bool {
-			// health check, metrics のログは除外
+			// ignore health check, metrics
 			return strings.Contains(c.Path(), "health") || strings.Contains(c.Path(), "metrics")
 		},
 	}

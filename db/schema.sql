@@ -39,42 +39,42 @@ CREATE TABLE public.users (
 -- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.users IS 'ユーザ情報';
+COMMENT ON TABLE public.users IS 'User Information';
 
 
 --
 -- Name: COLUMN users.id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.users.id IS 'ユーザID';
+COMMENT ON COLUMN public.users.id IS 'UserID';
 
 
 --
 -- Name: COLUMN users.user_name; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.users.user_name IS 'ユーザ名';
+COMMENT ON COLUMN public.users.user_name IS 'UserName';
 
 
 --
 -- Name: COLUMN users.email; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.users.email IS 'メールアドレス';
+COMMENT ON COLUMN public.users.email IS 'Email Address';
 
 
 --
 -- Name: COLUMN users.created_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.users.created_at IS '作成日';
+COMMENT ON COLUMN public.users.created_at IS 'Creation Date';
 
 
 --
 -- Name: COLUMN users.updated_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.users.updated_at IS '更新日';
+COMMENT ON COLUMN public.users.updated_at IS 'Last Update Date';
 
 
 --

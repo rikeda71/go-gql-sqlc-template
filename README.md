@@ -51,14 +51,29 @@ $ task integration-test
 
 ## Development
 
-### Generate API I/F with Graphql Schema
+### Generate API I/F From Graphql Schema
 
 ```bash
 $ task gql-gen
 ```
 
-### Generate DB I/F with SQL
+### Generate DB I/F From SQL
 
 ```bash
+# OR Mapper Code from DML
 $ task sqlc-gen
+
+# Model Code from DDL
+$ task migrate # generate `db/schema.sql` through `dbmate migrate`
+$ task sqlc-gen
+```
+
+### DB Operations
+
+```bash
+# migrate
+$ task migrate
+
+# rollback
+$ task rollback
 ```

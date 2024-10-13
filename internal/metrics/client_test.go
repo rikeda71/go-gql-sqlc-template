@@ -9,7 +9,6 @@ import (
 	dto "github.com/prometheus/client_model/go"
 )
 
-// 許容する誤差
 const tolerance = 1e-6
 
 type expectedRecord struct {
@@ -37,7 +36,7 @@ func TestCounter(t *testing.T) {
 		countFunc     func(m *Client)
 		want          []expectedRecord
 	}{
-		"正常系_labelがない場合のカウント": {
+		"success: no_label": {
 			targetMetrics: map[string][]string{
 				"test_counter": {},
 			},
@@ -54,7 +53,7 @@ func TestCounter(t *testing.T) {
 				},
 			},
 		},
-		"正常系_name,labelが1件の場合のカウント": {
+		"success: single_label": {
 			targetMetrics: map[string][]string{
 				"test2_counter": {"test_label"},
 			},
@@ -71,7 +70,7 @@ func TestCounter(t *testing.T) {
 				},
 			},
 		},
-		"正常系_nameが1件,labelが複数件の場合のカウント": {
+		"success: single_name_multiple_labels": {
 			targetMetrics: map[string][]string{
 				"test3_counter": {"test_label1", "test_label2"},
 			},
@@ -94,7 +93,7 @@ func TestCounter(t *testing.T) {
 				},
 			},
 		},
-		"正常系_name,labelが複数件の場合のカウント": {
+		"success: multiple_name_multiple_labels": {
 			targetMetrics: map[string][]string{
 				"apple_counter":      {"Kogyoku", "Jonagold"}, // {"紅玉", "ジョナゴールド"},
 				"strawberry_counter": {"Amao", "Tochiotome"},  // {"あまおう", "とちおとめ"},
@@ -171,7 +170,7 @@ func TestGauge(t *testing.T) {
 		setFunc       func(m *Client)
 		want          []expectedRecord
 	}{
-		"正常系_labelがない場合のGauge": {
+		"success: no_label": {
 			targetMetrics: map[string][]string{
 				"test_gauge": {},
 			},
@@ -188,7 +187,7 @@ func TestGauge(t *testing.T) {
 				},
 			},
 		},
-		"正常系_name,labelが1件の場合のGauge": {
+		"success: single_label": {
 			targetMetrics: map[string][]string{
 				"test2_gauge": {"test_label"},
 			},
@@ -201,11 +200,11 @@ func TestGauge(t *testing.T) {
 				{
 					name:   "test2_gauge",
 					labels: []string{"test_label"},
-					value:  3, // 最後にセットした値
+					value:  3, // value of last set
 				},
 			},
 		},
-		"正常系_nameが1件,labelが複数件の場合のGauge": {
+		"success: single_name_multiple_labels": {
 			targetMetrics: map[string][]string{
 				"test3_gauge": {"test_label1", "test_label2"},
 			},
@@ -219,19 +218,19 @@ func TestGauge(t *testing.T) {
 				{
 					name:   "test3_gauge",
 					labels: []string{"1", "2"},
-					value:  3, // 同一ラベルで最後にセットした値
+					value:  3, // value of last set in the same label
 				},
 				{
 					name:   "test3_gauge",
 					labels: []string{"10", "20"},
-					value:  4, // 同一ラベルで最後にセットした値
+					value:  4, // value of last set in the same label
 				},
 			},
 		},
-		"正常系_name,labelが複数件の場合のGauge": {
+		"success: multiple_name_multiple_labels": {
 			targetMetrics: map[string][]string{
-				"apple_gauge":      {"Kogyoku", "Jonagold"}, // {"紅玉", "ジョナゴールド"},
-				"strawberry_gauge": {"Amao", "Tochiotome"},  // {"あまおう", "とちおとめ"},
+				"apple_gauge":      {"Kogyoku", "Jonagold"}, // Apple Kinds
+				"strawberry_gauge": {"Amao", "Tochiotome"},  // Strawberry Kinds
 			},
 			setFunc: func(m *Client) {
 				const delicious = "delicious"
@@ -244,7 +243,6 @@ func TestGauge(t *testing.T) {
 				m.SetGauge("strawberry_gauge", 6, bad, delicious)
 				m.SetGauge("strawberry_gauge", 7, bad, delicious)
 			},
-			// いずれも value は同一ラベルで最後にセットした値になる
 			want: []expectedRecord{
 				{
 					name:   "apple_gauge",
@@ -316,7 +314,7 @@ func TestHistogram(t *testing.T) {
 		observeFunc   func(m *Client)
 		want          []expectedHistogram
 	}{
-		"正常系_labelがない場合のHistogram": {
+		"success: no_label": {
 			targetMetrics: map[string]registeredHistogram{
 				"test_histogram": {
 					labels:  []string{},
@@ -345,7 +343,7 @@ func TestHistogram(t *testing.T) {
 				},
 			},
 		},
-		"正常系_name,labelが単一の場合のHistogram": {
+		"success: single_label": {
 			targetMetrics: map[string]registeredHistogram{
 				"test_histogram2": {
 					labels:  []string{"test_label"},

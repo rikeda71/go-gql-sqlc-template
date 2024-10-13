@@ -6,12 +6,12 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-COMMENT ON TABLE users IS 'ユーザ情報';
-COMMENT ON COLUMN users.id IS 'ユーザID';
-COMMENT ON COLUMN users.user_name IS 'ユーザ名';
-COMMENT ON COLUMN users.email IS 'メールアドレス';
-COMMENT ON COLUMN users.created_at IS '作成日';
-COMMENT ON COLUMN users.updated_at IS '更新日';
+COMMENT ON TABLE users IS 'User Information';
+COMMENT ON COLUMN users.id IS 'UserID';
+COMMENT ON COLUMN users.user_name IS 'UserName';
+COMMENT ON COLUMN users.email IS 'Email Address';
+COMMENT ON COLUMN users.created_at IS 'Creation Date';
+COMMENT ON COLUMN users.updated_at IS 'Last Update Date';
 
 -- migrate:down
 DROP TABLE users;

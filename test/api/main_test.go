@@ -30,14 +30,14 @@ var (
 	Server     *echo.Echo
 )
 
-// TestMain パッケージ内の全てのApiTestを実行
+// Execute api tests in the package
 func TestMain(m *testing.M) {
-	// docker 上で postgresql を起動
+	// start postgresql container with docker
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		log.Fatalf("failed to connect docker: %v", err)
 	}
-	// DBの初期化ができなかった場合にすぐにテストを終わらせるために早めの秒数に設定
+	// set max wait time to 20 seconds because we want to fail fast if we can't connect to the database
 	pool.MaxWait = time.Second * 20
 
 	pwd, err := os.Getwd()
@@ -52,9 +52,9 @@ func TestMain(m *testing.M) {
 	}
 
 	runOptions := &dockertest.RunOptions{
-		// docker-compose と同じにしておく
+		// sampe compose.yaml settings
 		Repository: "postgres",
-		// Cloud SQL とバージョンを揃えている
+		// same CloudSQL of Google Cloud settings
 		Tag: "16.3-bullseye",
 		Env: []string{
 			fmt.Sprintf("POSTGRES_DB=%s", cnf.DatabaseName),
@@ -67,7 +67,7 @@ func TestMain(m *testing.M) {
 
 	resource, err := pool.RunWithOptions(runOptions,
 		func(config *docker.HostConfig) {
-			// 処理が終了したらインスタンスを削除
+			// delete container when it stops
 			config.AutoRemove = true
 			config.RestartPolicy = docker.RestartPolicy{
 				Name:              "no",
@@ -78,13 +78,11 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("could not start docker resource: %v", err)
 	}
-	// コンテナの起動まで時間がかかるので5秒待つ
-	time.Sleep(time.Second * 5)
 	hostAndPort := resource.GetHostPort("5432/tcp")
 	cnf.DatabaseHost = strings.Split(hostAndPort, ":")[0]
 	cnf.DatabasePort, _ = strconv.Atoi(strings.Split(hostAndPort, ":")[1])
 
-	// docker が起動するまで少し時間がかかるのでリトライする
+	// Retry to connect to the database until available
 	if err := pool.Retry(func() error {
 		cnf, err := pgxpool.ParseConfig(cnf.DataSource())
 		if err != nil {
@@ -94,11 +92,12 @@ func TestMain(m *testing.M) {
 		if err != nil {
 			return errors.WithMessage(err, "failed to open postgresql connection")
 		}
-		// 一応 Ping 飛ばして動作確認をする
+		// ping postgresql before running queries
 		if err := p.Ping(context.Background()); err != nil {
 			return errors.WithMessage(err, "failed to ping postgresql")
 		}
-		// sqlc の query を生成
+
+		// setup global sqlc client
 		sqlcClient = db.New(p)
 		Pool = p
 		return nil
@@ -123,7 +122,7 @@ func TestMain(m *testing.M) {
 
 	// setup app
 	/// setup graphql handler
-	gqlHandler, err := internal.NewGraphQLHandler(cnf, sqlcClient, nil, metrics.NewClient())
+	gqlHandler, err := internal.NewGraphQLHandler(cnf, sqlcClient, metrics.NewClient())
 	if err != nil {
 		log.Fatalf("could not create graphql handler: %v", err)
 	}
@@ -135,7 +134,6 @@ func TestMain(m *testing.M) {
 		log.Fatalf("could not start server: %v", err)
 	}
 	Server = s.Server()
-	time.Sleep(time.Second * 5)
 
 	code := m.Run()
 
